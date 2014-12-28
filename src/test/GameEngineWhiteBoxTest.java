@@ -328,7 +328,7 @@ public class GameEngineWhiteBoxTest {
 	}
 
 	@Test
-	public void wrappedWrappedExplodeTest() {
+	public void wrappedWrappedExplodeTest() { //Bedi
 		engineObj.lokumClicked(new Position(2,6));
 		engineObj.lokumClicked(new Position(1,6));
 		
@@ -340,7 +340,7 @@ public class GameEngineWhiteBoxTest {
 	}
 
 	@Test
-	public void wrappedExplodeInRangeOfWrappedTest() {
+	public void wrappedExplodeInRangeOfWrappedTest() { //Atil
 		Lokum helper = factory.generateLokum("green", "RegularLokum");
 		board.setLokum(helper, new Position(5,4));
 		Lokum otherWrapped = factory.generateLokum("white", "WrappedLokum");
@@ -351,7 +351,7 @@ public class GameEngineWhiteBoxTest {
 	}
 
 	@Test
-	public void stripedStripedExplodeTest() {
+	public void stripedStripedExplodeTest() { //Bedi
 		engineObj.lokumClicked(new Position(4,2));
 		engineObj.lokumClicked(new Position(5,2));
 		
@@ -363,7 +363,7 @@ public class GameEngineWhiteBoxTest {
 	}
 
 	@Test
-	public void colorBombWrappedExplodeTest() {
+	public void colorBombWrappedExplodeTest() { //Atil
 		engineObj.lokumClicked(new Position(8,0));
 		engineObj.lokumClicked(new Position(8,1));
 		
@@ -375,7 +375,7 @@ public class GameEngineWhiteBoxTest {
 	}
 
 	@Test
-	public void colorBombColorBombExplodeTest() {
+	public void colorBombColorBombExplodeTest() { // Atil
 		engineObj.lokumClicked(new Position(8,0));
 		engineObj.lokumClicked(new Position(7,0));
 		
@@ -388,7 +388,7 @@ public class GameEngineWhiteBoxTest {
 	}
 
 	@Test
-	public void wrappedStripedExplodeTest() {
+	public void wrappedStripedExplodeTest() { // Bedi
 		engineObj.lokumClicked(new Position(6,6));
 		engineObj.lokumClicked(new Position(5,6));
 		
