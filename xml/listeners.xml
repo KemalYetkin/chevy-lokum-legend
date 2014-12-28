@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+	AUTHOR: atilberk 
+
+	WARNING:
+
+	ORDER OF THE LISTENERS IN XML MEANS
+	THE HIERARCHY OF THE CALL ORDER AS WELL,
+	SO DO NOT CHANGE THE ORDER OF THE SAME TAGGED
+	LISTENERS UNLESS YOU INTEND TO CHANGE THE PRIORITIES
+
+-->
+<listeners>
+	<swap-listener>
+		<name>Moves left updater</name>
+		<description>Decrements the number of the moves left accordingly</description>
+		<classname>MovesLeftUpdater</classname>
+	</swap-listener>
+	<swap-listener>
+		<name>ColorBomb + ColorBomb swap handler</name>
+		<description>Handles the swapping of two color bomb lokums</description>
+		<classname>ColorBombColorBombHandler</classname>
+	</swap-listener>
+	<swap-listener>
+		<name>ColorBomb + Wrapped swap handler</name>
+		<description>Handles the swapping of a color bomb and a wrapped lokum</description>
+		<classname>ColorBombWrappedHandler</classname>
+	</swap-listener>
+	<swap-listener>
+		<name>ColorBomb + Striped swap handler</name>
+		<description>Handles the swapping of a color bomb and a striped lokum</description>
+		<classname>ColorBombStripedHandler</classname>
+	</swap-listener>
+	<swap-listener>
+		<name>ColorBomb + Regular swap handler</name>
+		<description>Handles the swapping of a color bomb and a regular lokum</description>
+		<classname>ColorBombRegularHandler</classname>
+	</swap-listener>
+	<swap-listener>
+		<name>Wrapped + Wrapped swap handler</name>
+		<description>Handles the swapping of two wrapped lokums</description>
+		<classname>WrappedWrappedHandler</classname>
+	</swap-listener>
+	<swap-listener>
+		<name>Wrapped + Striped swap handler</name>
+		<description>Handles the swapping of a wrapped and a striped lokum</description>
+		<classname>WrappedStripedHandler</classname>
+	</swap-listener>
+	<swap-listener>
+		<name>Striped + Striped swap handler</name>
+		<description>Handles the swapping of two striped lokums</description>
+		<classname>StripedStripedHandler</classname>
+	</swap-listener>
+	<match-listener>
+		<name>Match Detector for 5 line formed lokums</name>
+		<description>5 Lokums match detector for line matches</description>
+		<classname>Match5SDetector</classname>
+	</match-listener>
+	<match-listener>
+		<name>Match Detector for 5 cross formed lokums</name>
+		<description>5 Lokums match detector for T, L, or + shaped matches</description>
+		<classname>Match5TDetector</classname>
+	</match-listener>
+	<match-listener>
+		<name>Match Detector for 4 line formed lokums</name>
+		<description>4 Lokums match detector for line matches</description>
+		<classname>Match4SDetector</classname>
+	</match-listener>
+	<match-listener>
+		<name>Match Detector for 3 line formed lokums</name>
+		<description>3 Lokums match detector for line matches</description>
+		<classname>Match3SDetector</classname>
+	</match-listener>
+	<explode-listener>
+		<name>ColorBomb Exploder</name>
+		<description>Explodes the color bomb lokum and other necessary lokums</description>
+		<classname>ColorBombExploder</classname>
+	</explode-listener>
+	<explode-listener>
+		<name>Wrapped Exploder</name>
+		<description>Explodes the wrapped lokum and other necessary lokums</description>
+		<classname>WrappedExploder</classname>
+	</explode-listener>
+	<explode-listener>
+		<name>Striped Exploder</name>
+		<description>Explodes the striped lokum and other necessary lokums</description>
+		<classname>StripedExploder</classname>
+	</explode-listener>
+	<explode-listener>
+		<name>Regular Lokum Exploder</name>
+		<description>Explodes the regular lokum</description>
+		<classname>RegularLokumExploder</classname>
+	</explode-listener>
+	<!-- NO NEED FOR THOSE FOR NOW, BUT WHO KNOWS?
+	<generate-listener>
+		<name>ColorBomb Generator</name>
+		<description>Generate a color bomb lokum</description>
+		<classname>ColorBombGenerator</classname>
+	</generate-listener>
+	<generate-listener>
+		<name>Wrapped Generator</name>
+		<description>Generate a wrapped lokum</description>
+		<classname>WrappedGenerator</classname>
+	</generate-listener><generate-listener>
+		<name>Striped Generator</name>
+		<description>Generate a striped lokum</description>
+		<classname>StripedGenerator</classname>
+	</generate-listener>
+	<generate-listener>
+		<name>Regular Generator</name>
+		<description>Generate a regular lokum</description>
+		<classname>RegularGenerator</classname>
+	</generate-listener>
+	-->
+</listeners>
