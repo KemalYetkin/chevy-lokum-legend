@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+<<<<<<< HEAD
+=======
+	<classpathentry kind="lib" path="assets/jl1.0.1.jar"/>
+>>>>>>> ec4d73b96adca2df8731da93ee094ea5d0308d35
+	<classpathentry kind="output" path="bin"/>
+</classpath>
