@@ -1,19 +1,17 @@
 package occupiers;
 
 import java.util.ArrayList;
-
 import cas.Position;
 import cas.TimeScoreGoal;
-import scomponents.SLokum;
-import engines.GUIEngine;
 import engines.GameEngine;
 
 public class SquareOccupierFactory {
 	// possible color list
+	@SuppressWarnings("serial")
 	public static ArrayList<String> possibleColors = new ArrayList<String>() {{add("red"); add ("green"); add("white"); add("brown");}};
 	// the singleton instance of the class
 	private static SquareOccupierFactory instance = null;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -37,14 +35,14 @@ public class SquareOccupierFactory {
 	public Lokum generateRandomRegularLokum(){
 		int randomNumber = (int) Math.floor(Math.random() * possibleColors.size());
 		Lokum newLokum = null;
-		if (GameEngine.getInstance().getLevel().getGoal() instanceof TimeScoreGoal &&  (int) Math.floor(Math.random() * 5) == 0)
+		if (GameEngine.getInstance().getLevel().getGoal() instanceof TimeScoreGoal &&  (int) Math.floor(Math.random() * 20) == 0)
 			newLokum = new TimeLokum();
 		else
 			newLokum = new RegularLokum();
 		newLokum.setColor(possibleColors.get(randomNumber));
 		return newLokum;
 	}
-	
+
 	/**
 	 * @param pos the position of the newly created regular Lokum
 	 * @return a randomly created regular Lokum with specified position according to the level type
@@ -62,6 +60,7 @@ public class SquareOccupierFactory {
 	 * 		   are the specified ones
 	 * @ensures a new Lokum is generated; if an exception occurs, it is catched properly
 	 */
+	@SuppressWarnings("rawtypes")
 	public Lokum generateLokum(String color, String type){
 		type = "occupiers." + type;
 
@@ -74,8 +73,6 @@ public class SquareOccupierFactory {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
-
 		return newLokum;
 	}
-	
 }

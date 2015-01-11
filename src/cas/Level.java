@@ -3,33 +3,31 @@ package cas;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Level.
  */
 public class Level {
-	
+
 	/** The level number. */
 	private int levelNumber;
-	
+
 	/** The goal. */
 	private Goal goal;
-	
+
 	/** The max moves. */
 	private int maxMoves;
-	
+
 	/** The special swap counter. */
 	private int specialSwapCounter;
-	
+
 	/** The xml file. */
 	private static File xmlFile = new File("xml/levels.xml");
-	
+
 	/** The instance. */
 	private static Level instance;
 
@@ -38,7 +36,7 @@ public class Level {
 	 */
 	private Level() {			
 	}
-	
+
 	/**
 	 * Gets the single instance of Level.
 	 *
@@ -60,11 +58,11 @@ public class Level {
 	 * @return the level
 	 */
 	public Level loadLevel(int levelNo){
-			setLevelNumber(levelNo);			
-			Document document;		
-			try {
-				document = XMLParser.getDomElement(xmlFile);			
-			
+		setLevelNumber(levelNo);			
+		Document document;		
+		try {
+			document = XMLParser.getDomElement(xmlFile);			
+
 			//find the according level
 			NodeList nodeList = document.getElementsByTagName("level");
 			Element eLevel = null;
@@ -75,7 +73,7 @@ public class Level {
 					break;
 				}				
 			}			
-			
+
 			//goal parse			
 			Element eGoal = (Element) eLevel.getElementsByTagName("goal").item(0);
 			String className = XMLParser.getValue(eGoal, "classname");
@@ -87,23 +85,22 @@ public class Level {
 			else{
 				setGoal(new ScoreGoal(goal));
 			}		
-			
+
 			//maxmoves parse			
 			setMaxMoves(Integer.parseInt(XMLParser.getValue(eLevel, "maxmoves")));
-			
+
 			//specialSwapCounter parse
 			setSpecialSwapCounter(levelNo);
-			
+
 			return this;
-			} catch (ParserConfigurationException | SAXException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-			
-		
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+
 	}	
-	
+
 	/**
 	 * Gets the total num levels.
 	 * @requires a proper xml file in correct path.
@@ -115,16 +112,15 @@ public class Level {
 		Document document;		
 		try {
 			document = XMLParser.getDomElement(xmlFile);
-			
+
 			NodeList nodeList = document.getElementsByTagName("levelno");
 			return nodeList.getLength();
-			
+
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 1;
-		
+
 	}
 
 	/**
@@ -198,5 +194,5 @@ public class Level {
 	private void setMaxMoves(int maxMoves) {
 		this.maxMoves = maxMoves;
 	}
-	
+
 }

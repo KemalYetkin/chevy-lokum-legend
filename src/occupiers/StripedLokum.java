@@ -1,9 +1,9 @@
 package occupiers;
 
 public class StripedLokum extends SpecialLokum {
-	
+
 	private String direction;
-	
+
 	/**
 	 * Constructor
 	 * Creates a specialLokum whose type is striped
@@ -12,12 +12,6 @@ public class StripedLokum extends SpecialLokum {
 	 */
 	public StripedLokum() {
 		super("striped");
-		double directionProb = Math.random();
-		if (directionProb<=0.5){
-			direction = "horizontal";
-		} else {
-			direction = "vertical";
-		}
 		setDirection(direction);
 		getDescription().setType(getDescription().getType() + "_" + direction);
 	}
@@ -34,6 +28,14 @@ public class StripedLokum extends SpecialLokum {
 	 * @modifies direction
 	 */
 	public void setDirection(String direction) {
+		if (direction == null) {
+			double directionProb = Math.random();
+			if (directionProb<=0.5){
+				direction = "horizontal";
+			} else {
+				direction = "vertical";
+			}
+		}
 		this.direction = direction;
 		this.getDescription().setType("striped_"+direction);
 	}

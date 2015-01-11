@@ -1,9 +1,11 @@
 package occupiers;
 
 public class TimeLokum extends RegularLokum {
+
+	public static final long defaultTime = 5; // 5s for all
 	// The time bonus which will be added to the remaining time when this Lokum is exploded
 	private long bonusTime;
-	
+
 	/**
 	 * Constructor
 	 * Creates a regular Lokum whose type is time
@@ -11,7 +13,7 @@ public class TimeLokum extends RegularLokum {
 	 */
 	public TimeLokum() {
 		super("time");
-		setBonusTime(5000); //5000 ms = 5 sn
+		setBonusTime(defaultTime);
 	}
 
 	/**

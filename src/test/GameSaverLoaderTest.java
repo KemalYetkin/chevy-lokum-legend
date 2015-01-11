@@ -47,7 +47,7 @@ public class GameSaverLoaderTest {
 	}
 	
 	@Test
-	public void saveAndLoadTest() { // by CeyCey
+	public void saveAndLoadTest() {
 		saver.saveCurrentGame("oyun");
 		loader.loadGame("oyun");
 		engine.createLoadedGame("oyun");

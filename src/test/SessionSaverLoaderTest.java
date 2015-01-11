@@ -26,7 +26,7 @@ public class SessionSaverLoaderTest {
 		level = Level.getInstance();
 		level.loadLevel(1);
 		engine.createNewGame(level);
-		player = new Player("testSession");
+		player = new Player("testsession");
 		engine.setPlayer(player);
 	}
 

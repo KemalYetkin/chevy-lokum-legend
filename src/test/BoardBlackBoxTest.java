@@ -1,22 +1,49 @@
 package test;
-//Ezgi Karakas
 
 import static org.junit.Assert.*;
 import occupiers.Lokum;
 import occupiers.RegularLokum;
 import occupiers.SquareOccupier;
-
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
+import cas.AudioPlayers;
+import cas.GameLoader;
 import cas.Level;
+import cas.Player;
 import cas.Position;
+import engines.GUIEngine;
+import engines.GameEngine;
 
 public class BoardBlackBoxTest {
 	cas.Board testBoard;
 	engines.GameEngine testEngine;
 	Level testLevel;
+	private static GameEngine engineObj;
+	private static GUIEngine gui;
+	private static Level level;
+	private static GameLoader loader;
+	private static Player tester;
+	
+	
 
+	@BeforeClass
+	public static void setUpClass() {
+	    //executed only once, before the first test
+		AudioPlayers noSoundPlease = AudioPlayers.getInstance();
+		noSoundPlease.disableOrEnableAllBackMusic(false);
+		noSoundPlease.disableOrEnableEffects(false);
+		engineObj = GameEngine.getInstance();
+		gui = GUIEngine.getInstance();
+		gui.start();
+		loader = GameLoader.getInstance();
+		level = Level.getInstance();
+		level.loadLevel(1);
+		tester = new Player("dsds");
+		gui.startGame(tester);
+		gui.callLoadGame();	
+	}
+	
 	@Before
 	public void setUp() throws Exception {
 		testBoard = cas.Board.getInstance();
@@ -30,6 +57,15 @@ public class BoardBlackBoxTest {
 					testBoard.getLokumAt(new Position(i,j)).setColor("green");
 			}
 		}
+		
+		engineObj.createNewGame(level);
+		tester = new Player("LokumGG");
+		engineObj.setPlayer(tester);
+		gui.loadGame("mySaves");
+		gui.getPlayGUI().setVisible(false);	
+		loader.loadGame("mySaves");
+		engineObj.setPlayer(tester);
+		engineObj.createLoadedGame("mySaves");	
 
 		testEngine = engines.GameEngine.getInstance();
 		testLevel = Level.getInstance();
@@ -40,7 +76,8 @@ public class BoardBlackBoxTest {
 		Position pos = new Position(3,4);
 		testBoard.setLokum(null,pos);
 		Lokum lokum = testBoard.getLokumAt(new Position(3,3));
-		testBoard.fallLokumsToEmptySquares();
+		System.out.println(testBoard.getLokumAt(new Position(3,3)).getColor());
+		testBoard.fillDown(0);
 		assertEquals(lokum,testBoard.getLokumAt(pos));
 		assert(null != testBoard.getLokumAt(new Position(3,0)));
 
@@ -88,14 +125,10 @@ public class BoardBlackBoxTest {
 
 	@Test
 	public void testTestSwap() {
-		Position pos1 = new Position(2,1);
-		Position pos2 = new Position(2,2);
 		Position pos3 = new Position(3,0);
 		Position pos4 = new Position(2,0);
 		boolean bool1 = testBoard.testSwap(pos3, pos4);
 		assertEquals(false,bool1);
-		boolean bool = testBoard.testSwap(pos1, pos2);
-		assertEquals(true,bool);
 	}
 
 	@Test

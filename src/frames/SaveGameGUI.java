@@ -6,21 +6,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import scomponents.SButton;
 import scomponents.SColor;
 import scomponents.SLabel;
-import cas.AudioPlayer;
-import cas.Player;
 import engines.GUIEngine;
 import engines.GameEngine;
 
+@SuppressWarnings("serial")
 public class SaveGameGUI extends JFrame{
 	private JTextField textField;
 
@@ -43,6 +40,7 @@ public class SaveGameGUI extends JFrame{
 		this.setLocationRelativeTo(null);
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				GameEngine.getInstance().startTimer();
 				System.exit(0);
 			}
 		});
@@ -54,17 +52,12 @@ public class SaveGameGUI extends JFrame{
 		JPanel headerPanel = new JPanel();
 		SLabel name = new SLabel("Enter your SAVE GAME name: ", SLabel.MAIN_MENU_AUTHOR);
 		textField = new JTextField();
-
-
 		headerPanel.setLayout(new GridLayout(0,1,0 ,15));
-
 		headerPanel.add(name);
-
 		headerPanel.add(textField);
 		headerPanel.setBackground(SColor.backgroundColor);
 		textPanelContainer.add(headerPanel);
 		textPanelContainer.setBackground(SColor.backgroundColor);
-
 
 		return textPanelContainer;
 	}
@@ -79,6 +72,7 @@ public class SaveGameGUI extends JFrame{
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
 				GUIEngine.getInstance().saveCurrentGame(textField.getText());
+				GameEngine.getInstance().startTimer();
 				dispose();
 			}
 		});
@@ -91,7 +85,6 @@ public class SaveGameGUI extends JFrame{
 		}
 
 		buttonPanelContainer.add(buttonPanel);
-
 		return buttonPanelContainer;
 	}
 
@@ -106,6 +99,7 @@ public class SaveGameGUI extends JFrame{
 		SButton backButton = new SButton("CANCEL SAVING", SButton.SUB_MENU_BUTTON);
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				GameEngine.getInstance().startTimer();
 				dispose();
 			}
 		});

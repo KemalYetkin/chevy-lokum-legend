@@ -7,22 +7,46 @@ import occupiers.SquareOccupier;
 import occupiers.SquareOccupierFactory;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import cas.AudioPlayers;
 import cas.Board;
 import cas.GameLoader;
 import cas.Level;
 import cas.Player;
 import cas.Position;
+import engines.GUIEngine;
 import engines.GameEngine;
 
 public class BoardWhiteBoxTest {
 	Board board;
 	GameEngine engine;
-	Level level;
-	GameLoader loader;
 	SquareOccupierFactory factory;
+	private static GameEngine engineObj;
+	private static GUIEngine gui;
+	private static Level level;
+	private static GameLoader loader;
+	private static Player tester;
+	
+	
 
+	@BeforeClass
+	public static void setUpClass() {
+	    //executed only once, before the first test
+		AudioPlayers noSoundPlease = AudioPlayers.getInstance();
+		noSoundPlease.disableOrEnableAllBackMusic(false);
+		noSoundPlease.disableOrEnableEffects(false);
+		engineObj = GameEngine.getInstance();
+		gui = GUIEngine.getInstance();
+		gui.start();
+		loader = GameLoader.getInstance();
+		level = Level.getInstance();
+		level.loadLevel(1);
+		tester = new Player("dsds");
+		gui.startGame(tester);
+		gui.callLoadGame();	
+	}
 	@Before
 	public void setUp() throws Exception {
 		board = Board.getInstance();
@@ -31,15 +55,19 @@ public class BoardWhiteBoxTest {
 		level.loadLevel(1);
 		loader = GameLoader.getInstance();
 		factory = SquareOccupierFactory.getInstance();
-		
 		Player tester = new Player("LokumGG");
 		engine.setPlayer(tester);
 		loader.loadGame("mysaves");
-
 		engine.setPlayer(tester);
 		engine.createLoadedGame("mysaves");
-		
-		
+		engineObj.createNewGame(level);
+		tester = new Player("LokumGG");
+		engineObj.setPlayer(tester);
+		gui.loadGame("mySaves");
+		gui.getPlayGUI().setVisible(false);	
+		loader.loadGame("mySaves");
+		engineObj.setPlayer(tester);
+		engineObj.createLoadedGame("mySaves");	
 	}
 
 	@Test
@@ -107,25 +135,24 @@ public class BoardWhiteBoxTest {
 					bulyon = false;
 			}
 		}
-		
 		assertTrue(bulyon);
-		assertFalse(board.repOK()); // we expect false because board includes null
+		assertFalse(board.repOK());
 	}
 	
 	@Test
 	public void fallLokumsToEmptySquaresTest(){
 		board.reset();
-		board.fallLokumsToEmptySquares();
+		board.fillDown(0);
 		
-		assertTrue(board.repOK()); // gordugumuz gibi fallLokumsToEmptySquares calismiyor su anda	
+		assertTrue(board.repOK());
 	}
 	
 	@Test
 	public void generateLokumsToEmptySquaresTest(){
 		board.reset();
-		board.generateLokumsToEmptySquares();
+		board.fillDown(0);
 		
-		assertTrue(board.repOK()); // gordugumuz gibi bu da bozuk
+		assertTrue(board.repOK());
 	}
 	
 	@Test

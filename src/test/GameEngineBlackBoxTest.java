@@ -1,21 +1,20 @@
 package test;
-//Ezgi Karakas
 
 import static org.junit.Assert.*;
-
 import java.lang.reflect.Method;
-
-import handlers.SubscriptionKeeper;
 import occupiers.SquareOccupier;
 import occupiers.SquareOccupierFactory;
-
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
+import cas.AudioPlayers;
 import cas.Board;
+import cas.GameLoader;
 import cas.Level;
 import cas.Player;
 import cas.Position;
+import engines.GUIEngine;
+import engines.GameEngine;
 
 public class GameEngineBlackBoxTest {
 	
@@ -23,7 +22,30 @@ public class GameEngineBlackBoxTest {
 	Level testLevel;
 	Board board;
 	SquareOccupierFactory sof;
+	private static GameEngine engineObj;
+	private static GUIEngine gui;
+	private static Level level;
+	private static GameLoader loader;
+	private static Player tester;
 
+	@BeforeClass
+	public static void setUpClass() {
+	    //executed only once, before the first test
+		AudioPlayers noSoundPlease = AudioPlayers.getInstance();
+		noSoundPlease.disableOrEnableAllBackMusic(false);
+		noSoundPlease.disableOrEnableEffects(false);
+		engineObj = GameEngine.getInstance();
+		gui = GUIEngine.getInstance();
+		gui.start();
+		loader = GameLoader.getInstance();
+		level = Level.getInstance();
+		level.loadLevel(1);
+		tester = new Player("dsds");
+		gui.startGame(tester);
+		gui.callLoadGame();	
+	}
+	
+	
 	@Before
 	public void setUp() throws Exception {
 		testEngine = engines.GameEngine.getInstance();
@@ -58,6 +80,18 @@ public class GameEngineBlackBoxTest {
 		board.setLokum(sof.generateLokum("red", "RegularLokum"), new Position(2,4));
 		board.setLokum(sof.generateLokum("white", "RegularLokum"), new Position(3,4));
 		board.setLokum(sof.generateLokum("green", "RegularLokum"), new Position(4,4));
+		
+		engineObj.createNewGame(level);
+		tester = new Player("LokumGG");
+		engineObj.setPlayer(tester);
+		gui.loadGame("mySaves");
+		gui.getPlayGUI().setVisible(false);	
+		loader.loadGame("mySaves");
+		engineObj.setPlayer(tester);
+		engineObj.createLoadedGame("mySaves");	
+
+		testEngine = engines.GameEngine.getInstance();
+		testLevel = Level.getInstance();
 	}
 
 	@Test
@@ -72,9 +106,8 @@ public class GameEngineBlackBoxTest {
 		testEngine.chooseLokum(new Position(3,4));
 		Method m = testEngine.getClass().getDeclaredMethod("swapWith", Position.class);
 		m.setAccessible(true);
-		String result = (String) m.invoke(testEngine, new Position(0, 2));
+		m.invoke(testEngine, new Position(0, 2));
 		assertEquals(testEngine.getFirstLokum(),null);
-		assertEquals(SubscriptionKeeper.getInstance().getComboCount(),0);
 		m.setAccessible(false);
 	}
 
@@ -98,12 +131,12 @@ public class GameEngineBlackBoxTest {
 
 	@Test
 	public void testCreateLoadedGame() {
-		Player player = new Player("ezgi");
+		Player player = new Player("dsds");
 		testEngine.setPlayer(player);
 		testEngine.createLoadedGame("ass");
-		assertEquals(testEngine.getScore(),180,0);
-		assertEquals(testEngine.getMovesLeft(),9);
-		assertEquals(testEngine.getPlayer().getName(),"ezgi");
+		assertEquals(testEngine.getScore(),360,0);
+		assertEquals(testEngine.getMovesLeft(),14);
+		assertEquals(testEngine.getPlayer().getName(),"dsds");
 		assertEquals(testEngine.getLevel().getLevelNumber(),1);	
 	}
 
@@ -117,7 +150,7 @@ public class GameEngineBlackBoxTest {
 	@Test
 	public void testUpdateMovesLeftBy() {
 		int moves = testEngine.getMovesLeft();
-		testEngine.updateScoreBy(2);
+		testEngine.updateMovesLeftBy(2);
 		assertEquals(testEngine.getMovesLeft(),(moves-2));
 	}
 

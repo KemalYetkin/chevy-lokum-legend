@@ -2,46 +2,29 @@ package cas;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import engines.GameEngine;
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class SessionLoader.
  */
 public class SessionLoader extends Configuration {
-	
+
 	/** The max level. */
 	private Level maxLevel;
-	
+
 	/** The score. */
 	private double score;
-	
+
 	/** The player. */
 	private Player player;
-	
+
 	/** The session xsd file. */
 	private File sessionXSDFile;
-	
+
 	/** The instance. */
 	private static SessionLoader instance;
 
@@ -93,12 +76,11 @@ public class SessionLoader extends Configuration {
 			setMaxLevel(loadMaxLevel(document));
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	/**
 	 * Checks if is player loadable.
 	 *

@@ -1,7 +1,6 @@
 package cas;
 
 import java.io.File;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,19 +11,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import engines.*;
 
-import engines.GUIEngine;
-import engines.GameEngine;
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class SessionSaver.
  */
 public class SessionSaver extends Configuration{
-	
+
 	/** The instance. */
 	private static SessionSaver instance;
 
@@ -33,7 +28,7 @@ public class SessionSaver extends Configuration{
 	 */
 	private SessionSaver() {
 		super();
-	
+
 	}
 
 	/**
@@ -46,7 +41,7 @@ public class SessionSaver extends Configuration{
 			instance = new SessionSaver();
 		return instance;
 	}	
-	
+
 	/**
 	 * Save session. 
 	 * @requires Game should be initialized, and all fields of GameEngine and GUIEngine should be filled.
@@ -56,7 +51,7 @@ public class SessionSaver extends Configuration{
 	public void saveSession() {
 		Player Player = GameEngine.getInstance().getPlayer();
 		int MaxLevelNumber = 0;
-		if(GameEngine.getInstance().getLevel().getLevelNumber() <= GUIEngine.getInstance().getMaxLevel()){
+		if(GameEngine.getInstance().getLevel().getLevelNumber() < GUIEngine.getInstance().getMaxLevel()){
 			MaxLevelNumber = GUIEngine.getInstance().getMaxLevel();
 		}
 		else{
@@ -95,8 +90,7 @@ public class SessionSaver extends Configuration{
 
 			// currentscore element
 			Element eCurrentScore = doc.createElement("score");
-			eCurrentScore
-					.appendChild(doc.createTextNode(Double.toString(Score)));
+			eCurrentScore.appendChild(doc.createTextNode(Double.toString(Score)));
 			rootElement.appendChild(eCurrentScore);
 
 			// level element
@@ -117,7 +111,6 @@ public class SessionSaver extends Configuration{
 			tf.transform(source, result);
 		} catch (ParserConfigurationException
 				| TransformerFactoryConfigurationError | TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

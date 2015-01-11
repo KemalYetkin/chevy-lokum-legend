@@ -7,23 +7,23 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import scomponents.SButton;
 import scomponents.SColor;
 import scomponents.SLabel;
-import cas.AudioPlayer;
 import cas.Player;
 import engines.GUIEngine;
 
+@SuppressWarnings("serial")
 public class PlayerNameRequestGUI extends JFrame{
 	private String playerName;
 	private JTextField textField;
-	
+
 	public PlayerNameRequestGUI() {
 		super();
 		init();
@@ -41,7 +41,6 @@ public class PlayerNameRequestGUI extends JFrame{
 		});
 	}
 
-
 	private void init() {
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		this.setSize(400,500);
@@ -51,27 +50,22 @@ public class PlayerNameRequestGUI extends JFrame{
 
 	private JPanel createLabelPanel(){
 		JPanel textPanelContainer = new JPanel();
-		
+
 		JPanel headerPanel = new JPanel();
 		SLabel name = new SLabel("Enter your name: ", SLabel.MAIN_MENU_AUTHOR);
 		textField = new JTextField();
-		
-		
+
 		headerPanel.setLayout(new GridLayout(0,1,0 ,15));
-		
 		headerPanel.add(name);
-		
 		headerPanel.add(textField);
 		headerPanel.setBackground(SColor.backgroundColor);
 		textPanelContainer.add(headerPanel);
 		textPanelContainer.setBackground(SColor.backgroundColor);
-		
-		
+
 		return textPanelContainer;
 	}
-	
-	private JPanel createStartButtonsPanel() {
 
+	private JPanel createStartButtonsPanel() {
 		JPanel buttonPanelContainer = new JPanel();
 		buttonPanelContainer.setBackground(SColor.backgroundColor);
 
@@ -79,20 +73,27 @@ public class PlayerNameRequestGUI extends JFrame{
 
 		ArrayList<SButton> buttons = new ArrayList<SButton>();
 
+		
+		
+		
 		SButton submitButton = new SButton("SUBMIT", SButton.SUBMIT_BUTTON);
-		submitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
+		
+		AbstractAction buttonPressed = new AbstractAction() {
+			@Override
+            public void actionPerformed(ActionEvent e) {
 				playerName = textField.getText();				
 				if(!playerName.equals("")){
-				Player player = new Player(playerName);				
-				GUIEngine.getInstance().startGame(player);
+					Player player = new Player(playerName);				
+					GUIEngine.getInstance().startGame(player);
 				}
-			}
-		});
+		}};	
+		
+		submitButton.addActionListener(buttonPressed);
+		submitButton.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
+        put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER,0), "Enter_pressed");
+		submitButton.getActionMap().put("Enter_pressed", buttonPressed);
 		buttons.add(submitButton);
 
-	
 		// END OF EDIT ZONE
 
 		buttonPanel.setLayout(new GridLayout(buttons.size(),1,0,10));
@@ -100,17 +101,16 @@ public class PlayerNameRequestGUI extends JFrame{
 		for (SButton b : buttons) {
 			buttonPanel.add(b);
 		}
-		
 		buttonPanelContainer.add(buttonPanel);
-		
+
 		return buttonPanelContainer;
 	}
-	
+
 	private JPanel createBackButtonsPanel() {
-		
+
 		JPanel footerPanelContainer = new JPanel();
 		footerPanelContainer.setBackground(SColor.backgroundColor);
-		
+
 		JPanel footerPanel = new JPanel();
 		footerPanel.setBackground(SColor.backgroundColor);
 
@@ -122,7 +122,7 @@ public class PlayerNameRequestGUI extends JFrame{
 		});
 		footerPanel.add(backButton);
 		footerPanelContainer.add(footerPanel);
-		
+
 		return footerPanelContainer;
 	}
 

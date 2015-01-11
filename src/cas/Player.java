@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 /**
  * Player is a class that can hold the id, and name information.
- * 
- * @author ogun
  *
  */
 public class Player {

@@ -515,7 +515,7 @@
 <type>RegularLokum</type>
 </lokum>
 <lokum>
-<color> </color>
+<color/>
 <position>
 <xcoord>7</xcoord>
 <ycoord>0</ycoord>
@@ -588,7 +588,7 @@
 <type>RegularLokum</type>
 </lokum>
 <lokum>
-<color> </color>
+<color/>
 <position>
 <xcoord>8</xcoord>
 <ycoord>0</ycoord>
@@ -662,7 +662,7 @@
 </lokums>
 </board>
 <currentscore>0.0</currentscore>
-<movesleft>0</movesleft>
+<movesleft>20</movesleft>
 <level>1</level>
-<specialswapsleft>0</specialswapsleft>
+<specialswapsleft>3</specialswapsleft>
 </game>

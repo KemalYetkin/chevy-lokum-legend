@@ -1,42 +1,29 @@
 package scomponents;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
-
-import cas.Board;
 import cas.Position;
 import engines.GUIEngine;
-import engines.GameEngine;
 
+@SuppressWarnings("serial")
 public class SLokum extends SOccupier {
 
 	public static enum whatWillBeTriggeredAfterThisLokum {
 		FALL, GENERATION, FINDMATCHES, IDLE
 	};
 
-	private int distance;
-	private boolean isThisLastLokumToBeGenerated;
-
 	private String color;
-	private whatWillBeTriggeredAfterThisLokum triggerType;
-	
 
 	public SLokum(String type, String color) {
 		super(type);
-		setTotalTravelDistance(1);
-		setLastGenerationStatus(false);
 		setColor(color);
 		setIcon();
 		addLokumListeners();
-		setTriggerType(whatWillBeTriggeredAfterThisLokum.IDLE);
 	}
 
-	
+
 	public String getColor() {
 		return this.color;
 	}
@@ -56,18 +43,6 @@ public class SLokum extends SOccupier {
 		String fn = "assets/images/" + getType() + "_" + getColor() + ".png";
 		//	System.out.println(fn);
 		return fn;
-	}
-
-	public void setTriggerType(whatWillBeTriggeredAfterThisLokum triggerType) {
-		this.triggerType = triggerType;
-	}
-
-	public void setTotalTravelDistance(int distance){
-		this.distance = distance;
-	}
-
-	public void setLastGenerationStatus(boolean bool){
-		isThisLastLokumToBeGenerated = bool;
 	}
 
 	private void addLokumListeners() {
@@ -104,69 +79,31 @@ public class SLokum extends SOccupier {
 		});
 	}
 
-	public void moveToPosition(Position pos) {
-		Thread t = new Thread(new MoveLoop(pos));
-		t.start();
+	public void moveFoo(Position target) {
+		//	System.out.println("Moved! @ "+ Thread.currentThread().getName());
+		setLocation((target.getX() * width()) + (width()/2),
+				(target.getY() * height()) + (height()/2));
+
+	}
+
+	class MoverListenerFoo implements Runnable {
+
+		private Position target;
+		public MoverListenerFoo(Position target){
+			this.target= target;
+		}
+
+		@Override
+		public void run() {
+			setLocation((target.getX() * width()) + (width()/2),
+					(target.getY() * height()) + (height()/2));
+		}
 	}
 
 	class MoveLoop implements Runnable {
-
-		private Position target;
 		private Timer timer;
-		private int initialY;
-		private int initialX;
 		private int targetX;
 		private int targetY;
-		private ActionListener signalEnoughAnimation;
-		private int maximumLoop = 6000;
-		private int loopCounter = 0;
-
-		public MoveLoop(Position pos) {
-			this.target = pos;
-			targetX = (target.getX() * width()) + (width()/2);
-			targetY = (target.getY() * height()) + (height()/2);
-			initialY = getY();
-			initialX = getX();
-			
-			signalEnoughAnimation = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					loopCounter++;
-					if (loopCounter >= maximumLoop){
-						loopCounter = 0;
-						timer.stop();
-					}
-					if (triggerType == whatWillBeTriggeredAfterThisLokum.FALL
-							&& Math.abs(getY() - initialY) >= height()
-							|| Math.abs(getX() - initialX) >= width()) {
-						GameEngine.getInstance().completeSwap();
-						triggerType = whatWillBeTriggeredAfterThisLokum.IDLE;
-						timer.stop();
-					} else if (triggerType == whatWillBeTriggeredAfterThisLokum.GENERATION
-							&& Math.abs(getY() - initialY) >= distance *height()) {
-						Board.getInstance().generateLokumsToEmptySquares();
-						triggerType = whatWillBeTriggeredAfterThisLokum.IDLE;
-						timer.stop();
-					} else if (triggerType == whatWillBeTriggeredAfterThisLokum.FINDMATCHES){
-						//System.out.println(isThisLastLokumToBeGenerated);
-						if (Math.abs(getY() - initialY) >= height() || Math.abs(getX() - initialX) >= width()) {
-							Board.getInstance().generateLokumsToEmptySquares();
-							setLastGenerationStatus(false);
-							triggerType = whatWillBeTriggeredAfterThisLokum.IDLE;
-							timer.stop();
-						} else if (isThisLastLokumToBeGenerated){
-							setLastGenerationStatus(false);
-							triggerType = whatWillBeTriggeredAfterThisLokum.IDLE;
-							timer.stop();
-							Board.getInstance().findAllMatches();
-						}
-					} else if (triggerType == whatWillBeTriggeredAfterThisLokum.IDLE){
-						timer.stop();
-					}
-				}
-			};
-			timer = new Timer(1, signalEnoughAnimation);
-		}
 
 		@Override
 		public void run() {
@@ -175,9 +112,7 @@ public class SLokum extends SOccupier {
 			int x = getX();
 			int counter = 0;
 			int y = getY();
-			int c = Math.max(Math.abs(targetX - x), Math.abs(targetY - y));
 			while ( x != targetX || y != targetY && counter < (targetY-y)*12) {
-			//for (int f = 0; f < c; f++) {
 				try {
 					setLocation(x + ((int) Math.signum(targetX - x)),
 							y + ((int) Math.signum(targetY - y)));

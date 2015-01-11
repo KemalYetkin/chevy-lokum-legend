@@ -4,30 +4,43 @@ import engines.GameEngine;
 
 public class ScoreGoal extends Goal {
 	private double scoreGoal;
-	
+
+	/**
+	 * Constructor
+	 * @param goal the score which must be reached to win the game
+	 */
 	public ScoreGoal(double goal){
 		super();
-		setGoal(goal);
+		setScoreGoal(goal);
 	}
-	
+
+	/**
+	 * @return true if current score is equal to or greater than the goal score
+	 * 		   false vice versa
+	 */
 	@Override
 	public boolean goalReached() {
-		// TODO Auto-generated method stub
-		return GameEngine.getInstance().getScore() >= getGoal();
+		return GameEngine.getInstance().getScore() >= getScoreGoal();
 	}
-	
-	public double getGoal(){
+
+	/**
+	 * @return the goal score
+	 */
+	public double getScoreGoal(){
 		return scoreGoal;
 	}
-	
-	private void setGoal(double goal){
+
+	/**
+	 * @param goal the new score  which must be reached to win the game
+	 */
+	private void setScoreGoal(double goal){
 		scoreGoal = goal;
 	}
-	
-	public String toString() {
-		return (int)getGoal()+"";
-	}
-	
-	
 
+	/**
+	 * @return the goal score as string
+	 */
+	public String toString() {
+		return (int)getScoreGoal()+"";
+	}
 }

@@ -9,6 +9,7 @@ import javax.swing.*;
  * The class generates modified labels for GUI
  * @author atilberk
  */
+@SuppressWarnings("serial")
 public class SLabel extends JLabel {
 
 	/**
@@ -19,7 +20,7 @@ public class SLabel extends JLabel {
 	 * Type field of the label
 	 */
 	private int type;
-	
+
 	/**
 	 * Constructor
 	 * Creates an empty label.
@@ -27,7 +28,7 @@ public class SLabel extends JLabel {
 	public SLabel(){
 		super();
 	}
-	
+
 	/**
 	 * Constructor
 	 * Creates a label with given type.
@@ -35,7 +36,7 @@ public class SLabel extends JLabel {
 	public SLabel(int type){
 		this("", type);
 	}
-	
+
 	/**
 	 * Constructor
 	 * Creates a label of given type with empty string and horizontal alignment
@@ -43,7 +44,7 @@ public class SLabel extends JLabel {
 	public SLabel(int type, int horizontalAlignment){
 		this("", type, horizontalAlignment);
 	}
-	
+
 	/**
 	 * Constructor
 	 * Creates a label with given text of given type.
@@ -54,7 +55,7 @@ public class SLabel extends JLabel {
 		this.setFont(font);
 		this.setType(type);
 	}
-	
+
 	/**
 	 * Constructor
 	 * Creates a label with given text of given type with horizontal alignment.
@@ -65,7 +66,7 @@ public class SLabel extends JLabel {
 		this.setFont(font);
 		this.setType(type);
 	}
-	
+
 	/**
 	 * Loads the font, if fails loads Helvetica as default
 	 */
@@ -86,48 +87,52 @@ public class SLabel extends JLabel {
 		this.type = t;
 		float f;
 		switch (t) {
-			case MAIN_MENU_TITLE:
-				f = 42F;
-				this.setForeground(Color.white);
-				break;
-			case MAIN_MENU_SUBTITLE:
-				f = 18F;
-				this.setForeground(Color.white);
-				break;
-			case MAIN_MENU_AUTHOR:
-				f = 18F;
-				this.setForeground(Color.white);
-				break;		
-			case PLAY_LABEL:
-				f = 18F;
-				this.setForeground(Color.white);
-				break;
-			case PLAY_SIGN:
-				f = 24F;
-				this.setForeground(Color.white);
-				break;
-			case GAME_NAME:
-				f = 20F;
-				this.setForeground(Color.white);
-				break;
-			case GAME_OTHERS:
-				f = 14F;
-				this.setForeground(Color.white);
-				break;
-			case GLOW:
-				f = 14F;
-				this.setForeground(Color.white);
-				ImageIcon icon = new ImageIcon("assets/images/glow.png");
-				setIcon(icon);
-				break;
-			default:
-				f = 48F;
-				break;
+		case MAIN_MENU_TITLE:
+			f = 42F;
+			this.setForeground(Color.white);
+			break;
+		case MAIN_MENU_SUBTITLE:
+			f = 18F;
+			this.setForeground(Color.white);
+			break;
+		case MAIN_MENU_AUTHOR:
+			f = 18F;
+			this.setForeground(Color.white);
+			break;		
+		case PLAY_LABEL:
+			f = 18F;
+			this.setForeground(Color.white);
+			break;
+		case PLAY_SIGN:
+			f = 24F;
+			this.setForeground(Color.white);
+			break;
+		case GAME_NAME:
+			f = 20F;
+			this.setForeground(Color.white);
+			break;
+		case GAME_OTHERS:
+			f = 14F;
+			this.setForeground(Color.white);
+			break;
+		case GLOW:
+			f = 14F;
+			this.setForeground(Color.white);
+			ImageIcon icon = new ImageIcon("assets/images/glow.png");
+			setIcon(icon);
+			break;
+		default:
+			f = 48F;
+			break;
 		}
 		font = font.deriveFont(f);
 		this.setFont(font);
 	}
-	
+
+	public int getType(){
+		return type;
+	}
+
 	/**
 	 * Type values of SLabel
 	 */	

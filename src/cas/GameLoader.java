@@ -5,57 +5,44 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import engines.GameEngine;
 import occupiers.*;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class GameLoader.
  */
 public class GameLoader extends Configuration {
-	
+
 	/** The player. */
 	private Player player;
-	
+
 	/** The occupier matrix. */
 	private SquareOccupier[][] occupierMatrix;
-	
+
 	/** The score. */
 	private double score;
-	
+
 	/** The moves left. */
 	private int movesLeft;
-	
+
 	/** The level. */
 	private Level level;
-	
+
 	/** The time left. */
 	private long timeLeft;
-	
+
 	/** The special swap left. */
 	private int specialSwapsLeft;
-	
+
 	/** The game xsd file. */
 	private File gameXSDFile;
-	
+
 	/** The instance. */
 	private static GameLoader instance;
 
@@ -107,14 +94,11 @@ public class GameLoader extends Configuration {
 			setOccupierMatrix(loadBoard(document));
 			setScore(loadScore(document));
 			setMovesLeft(loadMovesLeft(document));
-			setLevel(loadLevel(document));
-			if(getLevel().getGoal() instanceof TimeScoreGoal){
-				setTimeLeft(loadTimeLeft(document));
-			}
+			setLevel(loadLevel(document));			
+			setTimeLeft(loadTimeLeft(document));			
 			setSpecialSwapsLeft(loadSpecialSwapsLeft(document));
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -133,7 +117,7 @@ public class GameLoader extends Configuration {
 		String playerPath = Player.getName().toLowerCase();
 		File playerDir = new File("xml/gameSaves/" + playerPath);
 		if(playerDir.list() != null){
-		return playerDir.list().length > 0;
+			return playerDir.list().length > 0;
 		}
 		else{
 			return false;
@@ -153,8 +137,7 @@ public class GameLoader extends Configuration {
 	public HashMap<String, ArrayList> loadableXMLs(Player Player) {
 		HashMap<String, ArrayList> resultList = new HashMap<String, ArrayList>();
 		if (isPlayerLoadable(Player)) {
-			Date date;
-			ArrayList list = new ArrayList();
+			Date date;			
 			int levelNo = 0;
 			String gameName = "";
 			String playerPath = Player.getName().toLowerCase();
@@ -164,6 +147,7 @@ public class GameLoader extends Configuration {
 			File[] directory = dir.listFiles();
 			if (directory != null) {
 				for (File child : directory) {
+					ArrayList list = new ArrayList();
 					date = new Date(child.lastModified());
 					gameName = child.getName();
 					try {
@@ -171,7 +155,6 @@ public class GameLoader extends Configuration {
 						levelNo = loadLevel(document).getLevelNumber();
 					} catch (ParserConfigurationException | SAXException
 							| IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					list.add(levelNo);
@@ -179,7 +162,6 @@ public class GameLoader extends Configuration {
 					resultList.put(gameName, list);
 				}
 			}
-
 		}
 		return resultList;
 	}
@@ -199,7 +181,7 @@ public class GameLoader extends Configuration {
 		Node node = nodeList.item(0).getFirstChild();
 		SquareOccupier[][] matrix = new SquareOccupier[Board.ROW_NUMBER][Board.COLUMN_NUMBER];
 		while (node != null) {
-			if (node.getNodeName() == "lokums") {
+			if (node.getNodeName().equals("lokums")) {
 				NodeList childList = node.getChildNodes();
 				for (int i = 0; i < childList.getLength(); i++) {
 					Node child = childList.item(i);
@@ -216,7 +198,7 @@ public class GameLoader extends Configuration {
 						String direction = XMLParser.getValue(eLokum, "direction");
 						Lokum lokum = SquareOccupierFactory.getInstance()
 								.generateLokum(color, type);
-						if(direction != ""){
+						if(!direction.equals("")){
 							((StripedLokum) lokum).setDirection(direction);
 						}
 						lokum.setPosition(position);
@@ -277,7 +259,7 @@ public class GameLoader extends Configuration {
 				Integer.parseInt(XMLParser.getElementValue(eLevel)));
 		return Level.getInstance();
 	}
-	
+
 	/**
 	 * Load time left.
 	 *
@@ -288,12 +270,16 @@ public class GameLoader extends Configuration {
 	 * @return the long
 	 */
 	private long loadTimeLeft(Document document){
+		long timeLeft = -1;
 		NodeList nodeList = document.getElementsByTagName("timeleft");
 		Element eTimeLeft = (Element) nodeList.item(0);
-		long timeLeft = Long.parseLong(XMLParser.getElementValue(eTimeLeft));
+		String sTimeLeft = XMLParser.getElementValue(eTimeLeft);
+		if(!sTimeLeft.equals("")){
+			timeLeft = Long.parseLong(sTimeLeft);
+		}
 		return timeLeft;
 	}
-	
+
 	/**
 	 * Load special swap left.
 	 *
@@ -343,7 +329,6 @@ public class GameLoader extends Configuration {
 	 * @param matrix the new board
 	 */
 	private void setOccupierMatrix(SquareOccupier[][] matrix) {
-		// TODO Auto-generated method stub
 		occupierMatrix = matrix;
 	}
 

@@ -1,15 +1,10 @@
 package engines;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
+import java.awt.event.*;
+import javax.swing.Timer;
 import handlers.SubscriptionKeeper;
 import cas.*;
 import occupiers.*;
-
 
 /**
  * GameEngine is a singleton class that controls logical operations of the game session
@@ -21,7 +16,6 @@ public class GameEngine {
 	 * Static Fields
 	 */
 	private static GameEngine instance;
-
 	private Level level;
 	private double score;
 	private int movesLeft;
@@ -33,11 +27,14 @@ public class GameEngine {
 	private double totalScore;
 	private long timeLeft;
 	private int specialSwapLeft;
+	private boolean thisWillBeSpecialSwap;
+	private Timer timer;
 
 	/**
 	 * Constructor
 	 */
 	private GameEngine() {
+		disableSpecialSwap();
 		setLevel(null);
 		setScore(-1);
 		setMovesLeft(-1);
@@ -45,6 +42,22 @@ public class GameEngine {
 		setPlayer(null);
 		disableInteraction();
 		completedSwapCounter=0;
+		setTimeLeft(-1);
+		timer = new Timer(1000, new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				decreaseRemainingTimeBy(1);
+				int c = SubscriptionKeeper.getInstance().getTimeBonusCount();
+				if(c != 0) {
+					GUIEngine.getInstance().getPlayGUI().setTimeLeft(timeLeft-c*TimeLokum.defaultTime + " + " + c*TimeLokum.defaultTime);
+					SubscriptionKeeper.getInstance().setTimeBonusCount(0);
+				} else {
+					GUIEngine.getInstance().getPlayGUI().setTimeLeft(timeLeft+"");
+				}
+
+				if (timeLeft == 0 )
+					gameLost();
+			}
+		});
 	}
 
 	/**
@@ -86,50 +99,14 @@ public class GameEngine {
 	 * @return
 	 */
 	public void chooseLokum(Position position) {
-		//System.out.println(Board.getInstance().toString());
-		//System.out.println("first lokum: "+position.getX()+","+position.getY()+","+Board.getInstance().getLokumAt(position).getColor());
 		setFirstLokum(Board.getInstance().getLokumAt(position));
-
 		GUIEngine.getInstance().getPlayGUI().getBoardGUI().glow(true);
 	}
 
-	/**
-	 * Swaps the chosen first lokum with the lokum at the given position
-	 * 	 
-	 * @param Position of the second lokum
-	 * @requires instance.firstLokum != null
-	 * 			 sPosition != null
-	 * 			 sPosition != instance.fistLokum.getPosition()
-	 * @modifies instance.firstLokum
-	 * 			 comboCount = 0
-	 * @ensures instance.firstLokum is set to null, two lokums are swapped if possible
-	 * @return
-	 */
-	private void swapWith(Position sPosition) {
-		disableInteraction();
-		this.sPosition = sPosition;
-		SubscriptionKeeper.getInstance().setComboCount(0);
-		boolean swappable = Board.getInstance().testSwap(firstLokum.getPosition(), sPosition);
-		System.out.println("swappable: " + swappable);
-		if (swappable) {
-			//System.out.println("swappable");
-			Position fPosition = firstLokum.getPosition();
-			//System.out.println(Board.getInstance().toString());
-
-			GUIEngine.getInstance().swapSLokums(fPosition, sPosition);
-		} else {
-			//System.out.println("not swappable");
-			completedSwapCounter = 0;
-			deselectLokum();
-			enableInteraction();
-		}
-		//System.out.println(Board.getInstance().toString());
-	}
-	
 	public void saveGame(String gamePath){
 		GameSaver.getInstance().saveCurrentGame(gamePath);
 	}
-	
+
 	public void saveSession(){
 		SessionSaver.getInstance().saveSession();
 	}
@@ -142,11 +119,11 @@ public class GameEngine {
 	 * @ensures there is no possible combination
 	 * @return
 	 */
-	
 	public void completeSwap(){
 		completedSwapCounter++;
 		if (completedSwapCounter == 2){
 			completedSwapCounter = 0;
+
 			Position fPosition = firstLokum.getPosition();
 			Lokum secondLokum = Board.getInstance().getLokumAt(sPosition);
 			Board.getInstance().setLokum(secondLokum, fPosition);
@@ -154,13 +131,11 @@ public class GameEngine {
 			SubscriptionKeeper.getInstance().swapped(firstLokum, secondLokum);
 
 			checkGame();
+			AudioPlayers.getInstance().playFallingDoneEffect(true);
 			deselectLokum();
 			GUIEngine.getInstance().getPlayGUI().getBoardGUI().refreshBoard();
 			enableInteraction();
 		}
-		//if (completedSwapCounter == 0){}
-		//GUIEngine.getInstance().getPlayGUI().getBoardGUI().setAndDrawBoard(Board.getInstance().getRepresentationMatrix());
-		
 	}
 
 	/**
@@ -172,13 +147,9 @@ public class GameEngine {
 	 * @return
 	 */
 	public void deselectLokum() {
-		//System.out.println("first lokum: null");
-
 		GUIEngine.getInstance().getPlayGUI().getBoardGUI().glow(false);
-
 		setFirstLokum(null);
 	}
-
 
 	/**
 	 * Enables the interaction with GUI
@@ -217,11 +188,19 @@ public class GameEngine {
 	 */
 	public void createNewGame(Level level) {
 		setLevel(level);
+		if(level.getGoal() instanceof TimeScoreGoal)
+			setTimeLeft(((TimeScoreGoal)level.getGoal()).getTimeGoal());
+		else
+			setTimeLeft(-1);
+
 		setScore(0);
 		setMovesLeft(level.getMaxMoves());
 		setFirstLokum(null);
+		disableSpecialSwap();
+		setSpecialSwapsLeft(level.getSpecialSwapCounter());
 		Board.getInstance().newBoard();
 		enableInteraction();
+		startTimer();
 	}
 
 	/**
@@ -234,8 +213,8 @@ public class GameEngine {
 	 * 				if there is not a saved game, creates a new game from the maximum level possible
 	 * @return	 
 	 */
-
-	public void createLoadedGame(String path){			
+	public void createLoadedGame(String path){	
+		disableSpecialSwap();
 		GameLoader.getInstance().loadGame(path);		
 		setLevel(GameLoader.getInstance().getLevel());
 		setScore(GameLoader.getInstance().getScore());
@@ -245,6 +224,35 @@ public class GameEngine {
 		setFirstLokum(null);
 		Board.getInstance().loadBoard(GameLoader.getInstance().getOccupierMatrix());
 		enableInteraction();
+		startTimer();
+	}
+
+	/**
+	 * Starts the timer of the game
+	 * 
+	 * @param
+	 * @requires timeLeft != -1
+	 * @modifies
+	 * @ensures timer is started
+	 * @return
+	 */
+	public void startTimer(){
+		if (getTimeLeft() != -1)
+			timer.start();
+	}
+
+	/**
+	 * Stops the timer of the game
+	 * 
+	 * @param
+	 * @requires
+	 * @modifies
+	 * @ensures timer is stopped
+	 * @return
+	 */
+	public void stopTimer(){
+		if (timer.isRunning())
+			timer.stop();
 	}
 
 	/**
@@ -332,7 +340,7 @@ public class GameEngine {
 	 * @requires instance.firstLokum != null
 	 * @modifies 
 	 * @ensures 
-	 * @return
+	 * @returns
 	 */
 	public Lokum getFirstLokum() {
 		return firstLokum;
@@ -364,7 +372,7 @@ public class GameEngine {
 	 */
 	public void updateScoreBy(double amount) {
 		setScore(getScore() + amount);
-	//	GUIEngine.getInstance().getPlayGUI().setScore(getScore()+"");
+		GUIEngine.getInstance().getPlayGUI().setScore(getScore()+"");
 	}
 
 	/**
@@ -380,7 +388,7 @@ public class GameEngine {
 	 */
 	public void updateMovesLeftBy(int amount) {
 		setMovesLeft(getMovesLeft() - amount);
-	//	GUIEngine.getInstance().getPlayGUI().setMovesLeft(getMovesLeft()+"");
+		GUIEngine.getInstance().getPlayGUI().setMovesLeft(getMovesLeft()+"");
 	}
 
 	/**
@@ -413,7 +421,6 @@ public class GameEngine {
 	 * @return
 	 */
 	public void lokumClicked(Position position) {
-		//System.out.println("interaction: " + interactionEnabled);
 		if (position != null && interactionEnabled) {
 
 			if (getFirstLokum() == null)
@@ -421,9 +428,6 @@ public class GameEngine {
 			else if (Board.getInstance().getLokumAt(position).equals(getFirstLokum()))
 				deselectLokum();
 			else {
-				//GUIEngine.getInstance().getPlayGUI().getBoardGUI().printBoardGUI();
-				//System.out.println("Here is the board:\n"+Board.getInstance().toString());
-
 				swapWith(position);
 			}
 		}
@@ -433,6 +437,7 @@ public class GameEngine {
 	 * When Game is Lost
 	 */
 	private void gameLost() {
+		stopTimer();
 		disableInteraction();
 		GUIEngine.getInstance().gameIsOverLosingSituation();		
 	}
@@ -441,6 +446,7 @@ public class GameEngine {
 	 * When Game is Won
 	 */
 	private void gameWon() {
+		stopTimer();
 		disableInteraction();
 		increaseTotalScore(getScore());	
 		saveSession();				
@@ -455,8 +461,6 @@ public class GameEngine {
 		} else if (instance==null){
 			return false;
 		} else if ((score==-1 && movesLeft!=-1) || (score!=-1 && movesLeft==-1)) {
-			return false;
-		} else if (level.getMaxMoves()<movesLeft) {
 			return false;
 		}
 		return true;
@@ -481,15 +485,15 @@ public class GameEngine {
 	public Position getsPosition() {
 		return sPosition;
 	}
-	
+
 	public void setsPosition(Position pos) {
 		this.sPosition = pos;
 	}
-	
+
 	public int getCompletedSwapCounter() {
 		return completedSwapCounter;
 	}
-	
+
 	public void increaseRemainingTimeBy(long increment){
 		timeLeft += increment;
 	}
@@ -497,25 +501,62 @@ public class GameEngine {
 	public void decreaseRemainingTimeBy(long decrement){
 		timeLeft -= decrement;
 	}
-	
+
 	public long getTimeLeft(){
 		return timeLeft;
 	}
-	
+
 	public int getSpecialSwapsLeft(){
 		return specialSwapLeft;
 	}
-	
+
 	private void setTimeLeft(long time){
 		timeLeft = time;
 	}
-	
+
 	private void setSpecialSwapsLeft(int specialSwap){
 		specialSwapLeft = specialSwap;
 	}
-	
+
 	public void decreaseSpecialSwapLeft(){
 		--specialSwapLeft;
 	}
-	
+
+	private void swapWith(Position pSecond) {
+		disableInteraction();
+		boolean swappable;
+		if (thisWillBeSpecialSwap){
+			swappable = true;
+			decreaseSpecialSwapLeft();
+			GUIEngine.getInstance().specialSwapButtonClicked();
+			GUIEngine.getInstance().displayNewSpecialSwapLeft();
+		} else {
+			swappable = Board.getInstance().testSwap(firstLokum.getPosition(), pSecond);
+		}
+
+		if (swappable) {
+			Position pFirst = getFirstLokum().getPosition();
+			Lokum secondLokum = Board.getInstance().getLokumAt(pSecond);
+			Board.getInstance().setLokum(secondLokum, pFirst);
+			Board.getInstance().setLokum(getFirstLokum(), pSecond);
+
+			System.out.println("Swapping...");
+
+			GUIEngine.getInstance().swapSLokums(pFirst, pSecond);
+			SubscriptionKeeper.getInstance().swapped(getFirstLokum(), secondLokum);
+		}
+		else{
+			AudioPlayers.getInstance().playIncorrectSelectionEffect(true);
+		}
+		deselectLokum();
+		GUIEngine.getInstance().initiateAnimations();
+	}
+
+	public void enableSpecialSwap(){
+		thisWillBeSpecialSwap = true;
+	}
+
+	public void disableSpecialSwap(){
+		thisWillBeSpecialSwap = false;
+	}
 }

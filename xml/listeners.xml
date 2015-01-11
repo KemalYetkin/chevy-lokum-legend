@@ -87,6 +87,11 @@
 		<classname>StripedExploder</classname>
 	</explode-listener>
 	<explode-listener>
+		<name>Time Lokum Exploder</name>
+		<description>Explodes the tıme lokum</description>
+		<classname>TimeLokumExploder</classname>
+	</explode-listener>
+	<explode-listener>
 		<name>Regular Lokum Exploder</name>
 		<description>Explodes the regular lokum</description>
 		<classname>RegularLokumExploder</classname>

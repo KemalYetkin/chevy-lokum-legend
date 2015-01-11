@@ -3,7 +3,7 @@ package occupiers;
 public class LokumDescription extends SquareOccupierDescription {
 	// the color of the Lokum
 	private String color;
-		
+
 	/**
 	 * @modifies color
 	 * @param type the type of the Lokum representation
@@ -13,7 +13,7 @@ public class LokumDescription extends SquareOccupierDescription {
 		super(type);
 		setColor(color);
 	}
-	
+
 	/**
 	 * @return the color of the representation
 	 */

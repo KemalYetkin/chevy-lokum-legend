@@ -4,6 +4,10 @@
         <id>243</id>
         <name>cey</name>
     </player>
-    <score>12240.0</score>
-    <maxlevel>5</maxlevel>
+<<<<<<< HEAD
+    <score>31540.0</score>
+=======
+    <score>1000.0</score>
+>>>>>>> 5a5c437307210f98cf983ae1dc9d8f7766a31d5f
+    <maxlevel>10</maxlevel>
 </session>

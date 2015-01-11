@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <session>
     <player>
-        <id>627</id>
-        <name>testSession</name>
+        <id>873</id>
+        <name>testsession</name>
     </player>
     <score>0.0</score>
-    <maxlevel>1</maxlevel>
+    <maxlevel>2</maxlevel>
 </session>

@@ -1,7 +1,6 @@
 package cas;
 
 import java.io.File;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -11,21 +10,18 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import engines.GameEngine;
 import occupiers.Lokum;
 import occupiers.SquareOccupier;
 import occupiers.StripedLokum;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GameSaver.
  */
 public class GameSaver extends Configuration {
-	
+
 	/** The instance. */
 	private static GameSaver instance;
 
@@ -46,7 +42,7 @@ public class GameSaver extends Configuration {
 			instance = new GameSaver();
 		return instance;
 	}
-	
+
 	/**
 	 * Save current game.
 	 *
@@ -132,12 +128,12 @@ public class GameSaver extends Configuration {
 						String type = ((Lokum) current)
 								.getClass().getSimpleName();
 						eType.appendChild(doc.createTextNode(type));
-						
+
 						//direction element
 						if(type.equals("StripedLokum")){
-						String direction = ((StripedLokum) current).getDirection();
-						eDirection.appendChild(doc.createTextNode(direction));
-						eLokum.appendChild(eDirection);
+							String direction = ((StripedLokum) current).getDirection();
+							eDirection.appendChild(doc.createTextNode(direction));
+							eLokum.appendChild(eDirection);
 						}
 						eLokum.appendChild(eType);
 
@@ -162,14 +158,14 @@ public class GameSaver extends Configuration {
 			Element eLevel = doc.createElement("level");
 			eLevel.appendChild(doc.createTextNode(Integer.toString(sLevelNumber)));
 			rootElement.appendChild(eLevel);
-			
+
 			//time element
 			if(GameEngine.getInstance().getLevel().getGoal() instanceof TimeScoreGoal){
-			Element eTime = doc.createElement("timeleft");
-			eTime.appendChild(doc.createTextNode(Long.toString(GameEngine.getInstance().getTimeLeft())));
-			rootElement.appendChild(eTime);
+				Element eTime = doc.createElement("timeleft");
+				eTime.appendChild(doc.createTextNode(Long.toString(GameEngine.getInstance().getTimeLeft())));
+				rootElement.appendChild(eTime);
 			}
-			
+
 			//specialSwap element
 			Element eSpecialSwap = doc.createElement("specialswapsleft");
 			eSpecialSwap.appendChild(doc.createTextNode(Integer.toString(GameEngine.getInstance().getSpecialSwapsLeft())));
@@ -188,7 +184,6 @@ public class GameSaver extends Configuration {
 			tf.transform(source, result);
 
 		} catch (ParserConfigurationException | TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

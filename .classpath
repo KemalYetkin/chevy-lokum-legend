@@ -2,7 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="assets/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="assets/jaudiotagger-2.0.1.jar"/>
+	<classpathentry kind="lib" path="assets/mp3plugin.jar"/>
+	<classpathentry kind="lib" path="assets/JLayer1.0.1/jl1.0.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

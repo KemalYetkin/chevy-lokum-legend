@@ -6,16 +6,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import scomponents.SButton;
 import scomponents.SColor;
 import engines.GUIEngine;
 
+@SuppressWarnings("serial")
 public class StartGameGUI extends JFrame {
 
 	public StartGameGUI() {
@@ -27,7 +26,6 @@ public class StartGameGUI extends JFrame {
 		this.getContentPane().add(createBackButtonsPanel());
 		this.setVisible(true);
 	}
-
 
 	private void init() {
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
@@ -45,11 +43,7 @@ public class StartGameGUI extends JFrame {
 
 		JPanel buttonPanelContainer = new JPanel();
 		buttonPanelContainer.setBackground(SColor.backgroundColor);
-		//buttonPanelContainer.setLayout(new BoxLayout(buttonPanelContainer,
-		//		BoxLayout.Y_AXIS));	
-
 		JPanel buttonPanel = new JPanel();
-
 		ArrayList<SButton> buttons = new ArrayList<SButton>();
 
 		// ONLY CHANGE HERE! ADD SBUTTONS TO THE LIST
@@ -75,17 +69,17 @@ public class StartGameGUI extends JFrame {
 		for (SButton b : buttons) {
 			buttonPanel.add(b);
 		}
-		
+
 		buttonPanelContainer.add(buttonPanel);
-		
+
 		return buttonPanelContainer;
 	}
-	
+
 	private JPanel createBackButtonsPanel() {
-		
+
 		JPanel footerPanelContainer = new JPanel();
 		footerPanelContainer.setBackground(SColor.backgroundColor);
-		
+
 		JPanel footerPanel = new JPanel();
 		footerPanel.setBackground(SColor.backgroundColor);
 
@@ -97,9 +91,6 @@ public class StartGameGUI extends JFrame {
 		});
 		footerPanel.add(backButton);
 		footerPanelContainer.add(footerPanel);
-		
 		return footerPanelContainer;
 	}
-
-
 }

@@ -12,11 +12,14 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import cas.AudioPlayers;
+
 import scomponents.SButton;
 import scomponents.SColor;
 import scomponents.SLabel;
 import engines.GUIEngine;
 
+@SuppressWarnings("serial")
 public class GameOverGUI extends JFrame {
 	private String situation;
 
@@ -24,10 +27,8 @@ public class GameOverGUI extends JFrame {
 		super();
 		init();
 		this.situation = situation;
-
 		this.getContentPane().add(createHeaderPanel());
 		this.getContentPane().add(createButtonPanel());
-
 		this.setVisible(true);
 	}
 
@@ -53,10 +54,15 @@ public class GameOverGUI extends JFrame {
 		JPanel headerPanel = new JPanel();
 
 		String currentSituation = null;
-		if (situation.equals("win"))
+		AudioPlayers.getInstance().disableOrEnableBackgroundSounds(false);
+		if (situation.equals("win")){
 			currentSituation = "Game is over! You win!";
-		else if (situation.equals("lose"))
+			AudioPlayers.getInstance().disableOrEnableGameOverWinSound(GUIEngine.getInstance().getMusicStatus());
+		}
+		else if (situation.equals("lose")){
 			currentSituation = "Game is over! You lose!";
+			AudioPlayers.getInstance().disableOrEnableGameOverLooseSound(GUIEngine.getInstance().getMusicStatus());
+		}
 		SLabel situiaton = new SLabel(currentSituation, SLabel.PLAY_SIGN);
 		headerPanel.add(situiaton);
 
@@ -82,24 +88,29 @@ public class GameOverGUI extends JFrame {
 			SButton nextLevel = new SButton("NEXT LEVEL", SButton.GAME_OVER_BUTTON);
 			nextLevel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					GUIEngine.getInstance().loadNextLevel();
+					AudioPlayers.getInstance().disableOrEnableGameOverWinSound(false);
+					GUIEngine.getInstance().loadNextLevel();	
 				}
 			});
 			buttons.add(nextLevel);
 		}
-		
+
 		SButton mainMenu = new SButton("MAIN MENU", SButton.GAME_OVER_BUTTON);
 		mainMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GUIEngine.getInstance().returnMainMenuFromGameOverScreen();			
+				AudioPlayers.getInstance().disableOrEnableGameOverWinSound(false);;
+				AudioPlayers.getInstance().disableOrEnableGameOverLooseSound(false);
+				GUIEngine.getInstance().returnMainMenuFromGameOverScreen();	
+
 			}
 		});
 		buttons.add(mainMenu);
-		
+
 		if (situation.equals("lose")){
 			SButton exit = new SButton("EXIT", SButton.GAME_OVER_BUTTON);
 			exit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					AudioPlayers.getInstance().disableOrEnableGameOverLooseSound(false);
 					GUIEngine.getInstance().exitGame();
 				}
 			});
